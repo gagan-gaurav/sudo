@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "sudo"
 include ':app'
+
+include ':opencv'

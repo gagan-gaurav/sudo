@@ -1,0 +1,170 @@
+[
+  {
+    "level_": 0,
+    "message_": "Start JSON generation. Platform version: 21 min SDK version: x86",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -695891757
+  },
+  {
+    "level_": 0,
+    "message_": "rebuilding JSON C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\.cxx\\RelWithDebInfo\\6g2o2g13\\x86\\android_gradle_build.json due to:",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 1344608857
+  },
+  {
+    "level_": 0,
+    "message_": "- expected json C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\.cxx\\RelWithDebInfo\\6g2o2g13\\x86\\android_gradle_build.json file is not present, will remove stale json folder",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -1749021387
+  },
+  {
+    "level_": 0,
+    "message_": "- missing previous command file C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\.cxx\\RelWithDebInfo\\6g2o2g13\\x86\\metadata_generation_command.txt, will remove stale json folder",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -181039597
+  },
+  {
+    "level_": 0,
+    "message_": "- command changed from previous, will remove stale json folder",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 1765237871
+  },
+  {
+    "level_": 0,
+    "message_": "created folder \u0027C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\.cxx\\RelWithDebInfo\\6g2o2g13\\x86\u0027",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 1732376393
+  },
+  {
+    "level_": 0,
+    "message_": "executing cmake Executable : C:\\Users\\suman\\AppData\\Local\\Android\\Sdk\\cmake\\3.18.1\\bin\\cmake.exe\narguments : \n-HC:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_SYSTEM_VERSION\u003d21\n-DANDROID_PLATFORM\u003dandroid-21\n-DANDROID_ABI\u003dx86\n-DCMAKE_ANDROID_ARCH_ABI\u003dx86\n-DANDROID_NDK\u003dC:\\Users\\suman\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\n-DCMAKE_ANDROID_NDK\u003dC:\\Users\\suman\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\n-DCMAKE_TOOLCHAIN_FILE\u003dC:\\Users\\suman\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\build\\cmake\\android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003dC:\\Users\\suman\\AppData\\Local\\Android\\Sdk\\cmake\\3.18.1\\bin\\ninja.exe\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\build\\intermediates\\cxx\\RelWithDebInfo\\6g2o2g13\\obj\\x86\n-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dC:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\build\\intermediates\\cxx\\RelWithDebInfo\\6g2o2g13\\obj\\x86\n-DCMAKE_BUILD_TYPE\u003dRelWithDebInfo\n-BC:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\.cxx\\RelWithDebInfo\\6g2o2g13\\x86\n-GNinja\n-DANDROID_STL\u003dc++_shared\njvmArgs : \n\n",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -302769900
+  },
+  {
+    "level_": 0,
+    "message_": "Executable : C:\\Users\\suman\\AppData\\Local\\Android\\Sdk\\cmake\\3.18.1\\bin\\cmake.exe\narguments : \n-HC:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_SYSTEM_VERSION\u003d21\n-DANDROID_PLATFORM\u003dandroid-21\n-DANDROID_ABI\u003dx86\n-DCMAKE_ANDROID_ARCH_ABI\u003dx86\n-DANDROID_NDK\u003dC:\\Users\\suman\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\n-DCMAKE_ANDROID_NDK\u003dC:\\Users\\suman\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\n-DCMAKE_TOOLCHAIN_FILE\u003dC:\\Users\\suman\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\build\\cmake\\android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003dC:\\Users\\suman\\AppData\\Local\\Android\\Sdk\\cmake\\3.18.1\\bin\\ninja.exe\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\build\\intermediates\\cxx\\RelWithDebInfo\\6g2o2g13\\obj\\x86\n-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dC:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\build\\intermediates\\cxx\\RelWithDebInfo\\6g2o2g13\\obj\\x86\n-DCMAKE_BUILD_TYPE\u003dRelWithDebInfo\n-BC:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\.cxx\\RelWithDebInfo\\6g2o2g13\\x86\n-GNinja\n-DANDROID_STL\u003dc++_shared\njvmArgs : \n\n",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -722013165
+  },
+  {
+    "level_": 0,
+    "message_": "Exiting generation of C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\.cxx\\RelWithDebInfo\\6g2o2g13\\x86\\compile_commands.json.bin normally",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -1130589409
+  },
+  {
+    "level_": 0,
+    "message_": "done executing cmake",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 1452891620
+  },
+  {
+    "level_": 0,
+    "message_": "write command file C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\.cxx\\RelWithDebInfo\\6g2o2g13\\x86\\metadata_generation_command.txt",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -1354595187
+  },
+  {
+    "level_": 0,
+    "message_": "JSON generation completed without problems",
+    "file_": "C:\\Users\\suman\\Desktop\\android\\sudo\\opencv\\libcxx_helper\\CMakeLists.txt",
+    "tag_": "release|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -904002592
+  }
+]
