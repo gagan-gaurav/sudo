@@ -18,13 +18,16 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -78,17 +81,31 @@ public class MainActivity extends CameraActivity {
 
         @Override
         public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-            Mat input_rgba = inputFrame.rgba();
-            Mat input_gray = inputFrame.gray();
+            Mat src = inputFrame.rgba();
+            Mat gray = inputFrame.gray();
 
-            MatOfPoint corners = new MatOfPoint();
-            Imgproc.goodFeaturesToTrack(input_gray, corners, 20,0.01, 10, new Mat(), 3, false);
-            Point[] cornersArr = corners.toArray();
+            Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
+            Mat binary = new Mat(src.rows(), src.cols(), src.type(), new Scalar(0));
+            Imgproc.threshold(gray, binary, 100, 255, Imgproc.THRESH_BINARY_INV);
 
-            for(int i = 0; i < corners.rows(); i++){
-                Imgproc.circle(input_rgba, cornersArr[i], 10, new Scalar(0, 255, 0), 2);
-            }
-            return input_rgba;
+            List<MatOfPoint> contours = new ArrayList<>();
+            Mat hierarchey = new Mat();
+            Imgproc.findContours(binary, contours, hierarchey, Imgproc.RETR_TREE,
+                    Imgproc.CHAIN_APPROX_SIMPLE);
+            //Drawing the Contours
+            Scalar color = new Scalar(0, 255, 0);
+            Imgproc.drawContours(src, contours, -1, color, 2, Imgproc.LINE_8,
+                    hierarchey, 2, new Point() ) ;
+//            Core.flip(input_rgba.t(), input_rgba, 1);
+
+//            MatOfPoint corners = new MatOfPoint();
+//            Imgproc.goodFeaturesToTrack(input_gray, corners, 20,0.01, 10, new Mat(), 3, false);
+//            Point[] cornersArr = corners.toArray();
+//
+//            for(int i = 0; i < corners.rows(); i++){
+//                Imgproc.circle(input_rgba, cornersArr[i], 10, new Scalar(0, 255, 0), 2);
+//            }
+            return src;
         }
     };
 
