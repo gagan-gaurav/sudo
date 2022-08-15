@@ -9,11 +9,14 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.tensorflow.lite.Interpreter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
+
+    public static final String MODEL_PATH = "assets/model.tflite";
 
     // find the biggest contour.
     public static List<MatOfPoint> findBiggestContours(List<MatOfPoint> contours){
@@ -82,7 +85,7 @@ public class Utils {
         int width = box.width() / 9;
         int height = box.height() / 9;
         for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 9; j++){
+            for(int j = 8; j >= 0; j--){
                 Rect rec = new Rect(new Point(i * width, j * height), new Point(i * width + width, j * height + height));
                 Mat temp = box.submat(rec);
                 boxes.add(temp);
@@ -96,6 +99,17 @@ public class Utils {
         Mat dst = new Mat();
         Imgproc.resize(image, dst, size);
         return dst;
+    }
+
+    // cut out the outside portion of the boxes.
+    public static Mat refineBoxes(Mat box){
+        return box;
+    }
+
+    //get prediction here
+    public static List<Integer> getPrediction(List<Mat> boxes){
+        List<Integer> results = new ArrayList<>();
+        return results;
     }
 
 }

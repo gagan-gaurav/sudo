@@ -155,30 +155,23 @@ public class MainActivity extends CameraActivity {
                             new Point(450-1,450-1)
                     );
 
-                    Mat warpMat = Imgproc.getPerspectiveTransform(init,dst);
 
+                    // wrap the sudoku board into 450 * 450 mat.
+                    Mat warpMat = Imgproc.getPerspectiveTransform(init,dst);
                     Mat destImage = new Mat();
                     Imgproc.warpPerspective(src, destImage, warpMat, src.size());
 
-                    Rect rec = new Rect(new Point(0, 0), new Point(450, 450)); // Rect((0, 0), (0 + x, 0 + y)) -> opposite points.
-                    Mat mt1 = destImage.submat(rec);
 
-                    Mat mt2 = new Mat();
-                    Imgproc.resize(mt1, mt2, frameSize);
-//                    Size emptyArea = new Size(160, 480);
-//                    Mat mt2 = new Mat(emptyArea, CvType.CV_8UC4);
-//
-//                    System.out.println("dim :" + mt1.dims() + " col :" + mt1.cols() + " rows :" + mt1.rows() + " type :" + mt1.type()) ;
-//
-//                    Mat mt = new Mat();
-//                    List<Mat> source = Arrays.asList(mt2, mt1);
-//                    Core.hconcat(source, mt);
-////
-//                    System.out.println("destination image-> dim :" + mt.dims() + " col :" + mt.cols() + " rows :" + mt.rows() + " type :" + mt.type()) ;
-//                    System.out.println("tyep" + destImage.size());
-//                    return mt2;
-                    List<Mat> boxes = Utils.splitIntoBoxes(mt2);
-                    Mat box = boxes.get(8);
+                    // cut out the sudoku board int 450 * 450 dimension.
+                    Rect rec = new Rect(new Point(0, 0), new Point(450, 450)); // Rect((0, 0), (0 + x, 0 + y)) -> opposite points.
+                    Mat sudokuBoard = destImage.submat(rec);
+
+
+                    // split the sudoku into 81 small images of boxes and then refine them.
+                    List<Mat> boxes = Utils.splitIntoBoxes(sudokuBoard);
+
+                    //
+                    Mat box = boxes.get(0);
                     box = Utils.fitFrame(box, frameSize);
                     return box;
                 }
@@ -215,83 +208,3 @@ public class MainActivity extends CameraActivity {
         }
     }
 }
-
-//public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
-//
-//    CameraBridgeViewBase cameraBridgeViewBase;
-//
-//    Mat mat1, mat2, mat3;
-//
-//    BaseLoaderCallback baseLoaderCallback;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
-//        cameraBridgeViewBase = (JavaCameraView) findViewById(R.id.javaCameraView);
-//        cameraBridgeViewBase.setVisibility(SurfaceView.VISIBLE);
-//        cameraBridgeViewBase.setCvCameraViewListener(this);
-//
-//        baseLoaderCallback = new BaseLoaderCallback(this) {
-//            @Override
-//            public void onManagerConnected(int status) {
-//                System.out.println("OpenCvworking lol ");
-//                switch(status){
-//                    case BaseLoaderCallback.SUCCESS:
-//                        cameraBridgeViewBase.enableView();
-//                        break;
-//                    default:
-//                        super.onManagerConnected(status);
-//                        break;
-//                }
-//            }
-//        };
-//    }
-//
-//    @Override
-//    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-//        mat1 = inputFrame.rgba();
-//        return mat1;
-//    }
-//
-//    @Override
-//    public void onCameraViewStopped() {
-//        mat1.release();
-//        mat2.release();
-//        mat3.release();
-//    }
-//
-//    @Override
-//    public void onCameraViewStarted(int width, int height) {
-//        mat1 = new Mat(width, height, CvType.CV_8UC4);
-//        mat1 = new Mat(width, height, CvType.CV_8UC4);
-//        mat1 = new Mat(width, height, CvType.CV_8UC4);
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if(cameraBridgeViewBase != null){
-//            cameraBridgeViewBase.disableView();
-//        }
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if(!OpenCVLoader.initDebug()){
-//            Toast.makeText(this, "there is a problem.", Toast.LENGTH_SHORT).show();
-//        }else{
-//            baseLoaderCallback.onManagerConnected(BaseLoaderCallback.SUCCESS);
-//        }
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        if(cameraBridgeViewBase != null){
-//            cameraBridgeViewBase.disableView();
-//        }
-//    }
-//}
