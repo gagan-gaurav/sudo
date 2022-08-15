@@ -2,32 +2,30 @@ package com.gagan.sudo;
 
 import static org.opencv.android.CameraRenderer.LOGTAG;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraActivity;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
-import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,30 +82,111 @@ public class MainActivity extends CameraActivity {
             Mat src = inputFrame.rgba();
             Mat gray = inputFrame.gray();
 
+            Size frameSize = src.size();  // always the return any frame size == src frame size  (use resize for that).
+
+
+            // some preprocessing here.
             Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
             Mat binary = new Mat(src.rows(), src.cols(), src.type(), new Scalar(0));
             Imgproc.threshold(gray, binary, 100, 255, Imgproc.THRESH_BINARY_INV);
 
-            List<MatOfPoint> contours = new ArrayList<>();
-            Mat hierarchey = new Mat();
-            Imgproc.findContours(binary, contours, hierarchey, Imgproc.RETR_TREE,
-                    Imgproc.CHAIN_APPROX_SIMPLE);
-            //Drawing the Contours
-            Scalar color = new Scalar(0, 255, 0);
-            Imgproc.drawContours(src, contours, -1, color, 2, Imgproc.LINE_8,
-                    hierarchey, 2, new Point() ) ;
-//            Core.flip(input_rgba.t(), input_rgba, 1);
 
-//            MatOfPoint corners = new MatOfPoint();
-//            Imgproc.goodFeaturesToTrack(input_gray, corners, 20,0.01, 10, new Mat(), 3, false);
-//            Point[] cornersArr = corners.toArray();
+            // find all contours.
+            List<MatOfPoint> contours = new ArrayList<>();
+            Mat hierarchy = new Mat();
+            Imgproc.findContours(binary, contours, hierarchy, Imgproc.RETR_TREE,
+                    Imgproc.CHAIN_APPROX_SIMPLE);
+
+            // finding the biggest contours.
+            List<MatOfPoint> biggestContour = Utils.findBiggestContours(contours);
+
+
+            // if the list of biggestContour is not empty then only.
+            if(!biggestContour.isEmpty()) {
+                //Drawing the Contours
+                Scalar color = new Scalar(0, 255, 0); // color of the line.
+                Imgproc.drawContours(src, biggestContour, -1, color, 2);
+
+
+                // wraping the sudoku image.
+                MatOfPoint2f approx = new MatOfPoint2f();
+                biggestContour.get(0).convertTo(approx, CvType.CV_32F);
+
+                Moments moment = Imgproc.moments(approx);
+                int x = (int) (moment.get_m10() / moment.get_m00());
+                int y = (int) (moment.get_m01() / moment.get_m00());
+
+                Point[] sortedPoints = new Point[4];
+
+//                System.out.println("sortedpt: " + sortedPoints[0]);
+                double[] data;
+                int count = 0;
+                for(int i=0; i<approx.rows(); i++){
+                    data = approx.get(i, 0);
+                    double datax = data[0];
+                    double datay = data[1];
+                    if(datax < x && datay < y){
+                        sortedPoints[0]=new Point(datax,datay);
+                        count++;
+                    }else if(datax > x && datay < y){
+                        sortedPoints[1]=new Point(datax,datay);
+                        count++;
+                    }else if (datax < x && datay > y){
+                        sortedPoints[2]=new Point(datax,datay);
+                        count++;
+                    }else if (datax > x && datay > y){
+                        sortedPoints[3]=new Point(datax,datay);
+                        count++;
+                    }
+                }
+
+                if(sortedPoints[0] != null && sortedPoints[1] != null && sortedPoints[2] != null && sortedPoints[3] != null){
+                    MatOfPoint2f init = new MatOfPoint2f(
+                            sortedPoints[0],
+                            sortedPoints[1],
+                            sortedPoints[2],
+                            sortedPoints[3]
+                    );
+
+                    MatOfPoint2f dst = new MatOfPoint2f(
+                            new Point(0, 0),
+                            new Point(450-1,0),
+                            new Point(0,450-1),
+                            new Point(450-1,450-1)
+                    );
+
+                    Mat warpMat = Imgproc.getPerspectiveTransform(init,dst);
+
+                    Mat destImage = new Mat();
+                    Imgproc.warpPerspective(src, destImage, warpMat, src.size());
+
+                    Rect rec = new Rect(new Point(0, 0), new Point(450, 450)); // Rect((0, 0), (0 + x, 0 + y)) -> opposite points.
+                    Mat mt1 = destImage.submat(rec);
+
+                    Mat mt2 = new Mat();
+                    Imgproc.resize(mt1, mt2, frameSize);
+//                    Size emptyArea = new Size(160, 480);
+//                    Mat mt2 = new Mat(emptyArea, CvType.CV_8UC4);
 //
-//            for(int i = 0; i < corners.rows(); i++){
-//                Imgproc.circle(input_rgba, cornersArr[i], 10, new Scalar(0, 255, 0), 2);
-//            }
+//                    System.out.println("dim :" + mt1.dims() + " col :" + mt1.cols() + " rows :" + mt1.rows() + " type :" + mt1.type()) ;
+//
+//                    Mat mt = new Mat();
+//                    List<Mat> source = Arrays.asList(mt2, mt1);
+//                    Core.hconcat(source, mt);
+////
+//                    System.out.println("destination image-> dim :" + mt.dims() + " col :" + mt.cols() + " rows :" + mt.rows() + " type :" + mt.type()) ;
+//                    System.out.println("tyep" + destImage.size());
+//                    return mt2;
+                    List<Mat> boxes = Utils.splitIntoBoxes(mt2);
+                    Mat box = boxes.get(8);
+                    box = Utils.fitFrame(box, frameSize);
+                    return box;
+                }
+            }
             return src;
         }
     };
+
 
     @Override
     protected void onPause() {
