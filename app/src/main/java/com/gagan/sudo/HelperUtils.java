@@ -1,5 +1,8 @@
 package com.gagan.sudo;
 
+import android.app.Activity;
+import android.content.res.AssetFileDescriptor;
+
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -10,11 +13,17 @@ import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.support.image.ImageProcessor;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Utils {
+public class HelperUtils {
 
     public static final String MODEL_PATH = "assets/model.tflite";
 
@@ -88,6 +97,9 @@ public class Utils {
             for(int j = 8; j >= 0; j--){
                 Rect rec = new Rect(new Point(i * width, j * height), new Point(i * width + width, j * height + height));
                 Mat temp = box.submat(rec);
+
+                // add code for refining the boxes here.
+
                 boxes.add(temp);
             }
         }
@@ -106,9 +118,26 @@ public class Utils {
         return box;
     }
 
+
+
+
+//    public static MappedByteBuffer loadModelFile(Activity activity) throws IOException {
+//        AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(getModelPath());
+//        FileInputStream inputStream = new  FileInputStream(fileDescriptor.getFileDescriptor());
+//        FileChannel fileChannel = inputStream.getChannel();
+//        long startOffset = fileDescriptor.getStartOffset();
+//        long declaredLength = fileDescriptor.getDeclaredLength();
+//        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
+//    }
+//
+//    public static String getModelPath() {
+//        return MODEL_PATH;
+//    }
+
     //get prediction here
     public static List<Integer> getPrediction(List<Mat> boxes){
         List<Integer> results = new ArrayList<>();
+
         return results;
     }
 
