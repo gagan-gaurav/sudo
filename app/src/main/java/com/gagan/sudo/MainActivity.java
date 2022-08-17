@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraActivity;
 import org.opencv.android.CameraBridgeViewBase;
@@ -45,10 +47,15 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.sql.Array;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public class MainActivity extends CameraActivity {
@@ -113,142 +120,196 @@ public class MainActivity extends CameraActivity {
             Mat gray = inputFrame.gray();
 
 
-            Bitmap bitmap = Bitmap.createBitmap(gray.cols(), gray.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(gray, bitmap);
-
-            int width = bitmap.getWidth();
-            int height = bitmap.getHeight();
-
-            ImageProcessor imageProcessor = new ImageProcessor.Builder()
-                    .add(new ResizeOp(32, 32, ResizeOp.ResizeMethod.BILINEAR))
-                    .add(new NormalizeOp(0.0F, 1.0F))
-                    .add(new TransformToGrayscaleOp())
-                    .build();
-
-            TensorImage tensorImage = new TensorImage(DataType.FLOAT32);
-
-            tensorImage.load(bitmap);
-            tensorImage = imageProcessor.process(tensorImage);
-//            TensorBuffer outputBuffer = TensorBuffer.createFixedSize(new int[]{1, 10}, DataType.FLOAT32);
-//            System.out.println("info" + tensorImage.getBuffer() + ' ' + DataType.FLOAT32.byteSize());
-            float[][] output = new float[1][10];
-            tflite.run(tensorImage.getBuffer(), output);
-//            float[] data2 = outputBuffer. getFloatArray();
-            String s = "";
-            for(int i = 0; i < output[0].length; i++) s = s + Float.toString(output[0][i]) + " ";
-            System.out.println("hurraaah " + s);
-
-
-
-
-
-
-
-//            Size frameSize = src.size();  // always the return any frame size == src frame size  (use resize for that).
+//            Bitmap bitmap = Bitmap.createBitmap(gray.cols(), gray.rows(), Bitmap.Config.ARGB_8888);
+//            Utils.matToBitmap(gray, bitmap);
 //
+//            int width = bitmap.getWidth();
+//            int height = bitmap.getHeight();
 //
-//            // some preprocessing here.
-//            Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
-//            Mat binary = new Mat(src.rows(), src.cols(), src.type(), new Scalar(0));
-//            Imgproc.threshold(gray, binary, 100, 255, Imgproc.THRESH_BINARY_INV);
+//            ImageProcessor imageProcessor = new ImageProcessor.Builder()
+//                    .add(new ResizeOp(32, 32, ResizeOp.ResizeMethod.BILINEAR)) // resize the image into 32 * 32 pixels.
+//                    .add(new NormalizeOp(0.0F, 1.0F)) // Normalize the pixel values between 0 and 1.
+//                    .add(new Rot90Op(3)) // Rotate the image k times.
+//                    .add(new TransformToGrayscaleOp()) // Transform the image into single channel grayscale.
+//                    .build();
 //
+//            TensorImage tensorImage = new TensorImage(DataType.FLOAT32);
 //
-//            // find all contours.
-//            List<MatOfPoint> contours = new ArrayList<>();
-//            Mat hierarchy = new Mat();
-//            Imgproc.findContours(binary, contours, hierarchy, Imgproc.RETR_TREE,
-//                    Imgproc.CHAIN_APPROX_SIMPLE);
-//
-//            // finding the biggest contours.
-//            List<MatOfPoint> biggestContour = Utils.findBiggestContours(contours);
-//
-//
-//            // if the list of biggestContour is not empty then only.
-//            if(!biggestContour.isEmpty()) {
-//                //Drawing the Contours
-//                Scalar color = new Scalar(0, 255, 0); // color of the line.
-//                Imgproc.drawContours(src, biggestContour, -1, color, 2);
-//
-//
-//                // wraping the sudoku image.
-//                MatOfPoint2f approx = new MatOfPoint2f();
-//                biggestContour.get(0).convertTo(approx, CvType.CV_32F);
-//
-//                Moments moment = Imgproc.moments(approx);
-//                int x = (int) (moment.get_m10() / moment.get_m00());
-//                int y = (int) (moment.get_m01() / moment.get_m00());
-//
-//                Point[] sortedPoints = new Point[4];
-//
-////                System.out.println("sortedpt: " + sortedPoints[0]);
-//                double[] data;
-//                int count = 0;
-//                for(int i=0; i<approx.rows(); i++){
-//                    data = approx.get(i, 0);
-//                    double datax = data[0];
-//                    double datay = data[1];
-//                    if(datax < x && datay < y){
-//                        sortedPoints[0]=new Point(datax,datay);
-//                        count++;
-//                    }else if(datax > x && datay < y){
-//                        sortedPoints[1]=new Point(datax,datay);
-//                        count++;
-//                    }else if (datax < x && datay > y){
-//                        sortedPoints[2]=new Point(datax,datay);
-//                        count++;
-//                    }else if (datax > x && datay > y){
-//                        sortedPoints[3]=new Point(datax,datay);
-//                        count++;
-//                    }
-//                }
-//
-//                if(sortedPoints[0] != null && sortedPoints[1] != null && sortedPoints[2] != null && sortedPoints[3] != null){
-//                    MatOfPoint2f init = new MatOfPoint2f(
-//                            sortedPoints[0],
-//                            sortedPoints[1],
-//                            sortedPoints[2],
-//                            sortedPoints[3]
-//                    );
-//
-//                    MatOfPoint2f dst = new MatOfPoint2f(
-//                            new Point(0, 0),
-//                            new Point(450-1,0),
-//                            new Point(0,450-1),
-//                            new Point(450-1,450-1)
-//                    );
-//
-//
-//                    // wrap the sudoku board into 450 * 450 mat.
-//                    Mat warpMat = Imgproc.getPerspectiveTransform(init,dst);
-//                    Mat destImage = new Mat();
-//                    Imgproc.warpPerspective(src, destImage, warpMat, src.size());
-//
-//
-//                    // cut out the sudoku board int 450 * 450 dimension.
-//                    Rect rec = new Rect(new Point(0, 0), new Point(450, 450)); // Rect((0, 0), (0 + x, 0 + y)) -> opposite points.
-//                    Mat sudokuBoard = destImage.submat(rec);
-//
-//
-//                    // split the sudoku into 81 small images of boxes and then refine them.
-//                    List<Mat> boxes = Utils.splitIntoBoxes(sudokuBoard);
-//
-////                    List<Integer> results = Utils.getPrediction(boxes);
-//
-//
-//
-//                    ImageProcessor imageProcessor =
-//                            new ImageProcessor.Builder()
-//                                    .add(new ResizeOp(224, 224, ResizeOp.ResizeMethod.BILINEAR))
-//                                    .build();
-//
-//
-//
-//                    //
-//                    Mat box = boxes.get(0);
-//                    box = Utils.fitFrame(box, frameSize);
-//                    return box;
+//            tensorImage.load(bitmap);
+//            tensorImage = imageProcessor.process(tensorImage);
+////            TensorBuffer outputBuffer = TensorBuffer.createFixedSize(new int[]{1, 10}, DataType.FLOAT32);
+////            System.out.println("info" + tensorImage.getBuffer() + ' ' + DataType.FLOAT32.byteSize());
+//            float[][] output = new float[1][10];
+//            tflite.run(tensorImage.getBuffer(), output);
+////            float[] data2 = outputBuffer. getFloatArray();
+//            String s = "";
+//            for(int i = 0; i < output[0].length; i++) s = s + Float.toString(output[0][i]) + " ";
+//            System.out.println("hurraaah " + s);
+//            float prob = 0;
+//            int ans = -1;
+//            for(int i = 0; i < output[0].length; i++){
+//                if(prob < output[0][i]){
+//                    prob = output[0][i];
+//                    ans = i;
 //                }
 //            }
+//
+//            String text = "prob: " + Float.toString(prob) + " " + "num: " + Integer.toString(ans);
+//            Point position = new Point(100, 100);
+//            Scalar color = new Scalar(0, 0, 255);
+//            int font = Imgproc.FONT_HERSHEY_SIMPLEX;
+//            int scale = 1;
+//            int thickness = 3;
+//            Imgproc.putText(src, text, position, font, scale, color, thickness);
+
+
+
+
+
+
+
+            Size frameSize = src.size();  // always the return any frame size == src frame size  (use resize for that).
+
+
+            // some preprocessing here.
+            Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
+            Mat binary = new Mat(src.rows(), src.cols(), src.type(), new Scalar(0));
+            Imgproc.threshold(gray, binary, 100, 255, Imgproc.THRESH_BINARY_INV);
+
+
+            // find all contours.
+            List<MatOfPoint> contours = new ArrayList<>();
+            Mat hierarchy = new Mat();
+            Imgproc.findContours(binary, contours, hierarchy, Imgproc.RETR_TREE,
+                    Imgproc.CHAIN_APPROX_SIMPLE);
+
+            // finding the biggest contours.
+            List<MatOfPoint> biggestContour = HelperUtils.findBiggestContours(contours);
+
+
+            // if the list of biggestContour is not empty then only.
+            if(!biggestContour.isEmpty()) {
+                //Drawing the Contours
+                Scalar color = new Scalar(0, 255, 0); // color of the line.
+                Imgproc.drawContours(src, biggestContour, -1, color, 2);
+
+
+                // wraping the sudoku image.
+                MatOfPoint2f approx = new MatOfPoint2f();
+                biggestContour.get(0).convertTo(approx, CvType.CV_32F);
+
+                Moments moment = Imgproc.moments(approx);
+                int x = (int) (moment.get_m10() / moment.get_m00());
+                int y = (int) (moment.get_m01() / moment.get_m00());
+
+                Point[] sortedPoints = new Point[4];
+
+//                System.out.println("sortedpt: " + sortedPoints[0]);
+                double[] data;
+                int count = 0;
+                for(int i=0; i<approx.rows(); i++){
+                    data = approx.get(i, 0);
+                    double datax = data[0];
+                    double datay = data[1];
+                    if(datax < x && datay < y){
+                        sortedPoints[0]=new Point(datax,datay);
+                        count++;
+                    }else if(datax > x && datay < y){
+                        sortedPoints[1]=new Point(datax,datay);
+                        count++;
+                    }else if (datax < x && datay > y){
+                        sortedPoints[2]=new Point(datax,datay);
+                        count++;
+                    }else if (datax > x && datay > y){
+                        sortedPoints[3]=new Point(datax,datay);
+                        count++;
+                    }
+                }
+
+                if(sortedPoints[0] != null && sortedPoints[1] != null && sortedPoints[2] != null && sortedPoints[3] != null){
+                    MatOfPoint2f init = new MatOfPoint2f(
+                            sortedPoints[0],
+                            sortedPoints[1],
+                            sortedPoints[2],
+                            sortedPoints[3]
+                    );
+
+                    MatOfPoint2f dst = new MatOfPoint2f(
+                            new Point(0, 0),
+                            new Point(450-1,0),
+                            new Point(0,450-1),
+                            new Point(450-1,450-1)
+                    );
+
+
+                    // wrap the sudoku board into 450 * 450 mat.
+                    Mat warpMat = Imgproc.getPerspectiveTransform(init,dst);
+                    Mat destImage = new Mat();
+                    Imgproc.warpPerspective(src, destImage, warpMat, src.size());
+
+
+                    // cut out the sudoku board int 450 * 450 dimension.
+                    Rect rec = new Rect(new Point(0, 0), new Point(450, 450)); // Rect((0, 0), (0 + x, 0 + y)) -> opposite points.
+                    Mat sudokuBoard = destImage.submat(rec);
+
+
+                    // split the sudoku into 81 small images of boxes and then refine them.
+                    List<Mat> boxes = HelperUtils.splitIntoBoxes(sudokuBoard);
+
+
+                    // prediction part here
+                    List<Integer> detectedDigits = new ArrayList<>();
+
+                    for(int i = 0; i < boxes.size(); i++){
+                        Bitmap bitmap = Bitmap.createBitmap(boxes.get(i).cols(), boxes.get(i).rows(), Bitmap.Config.ARGB_8888);
+                        Utils.matToBitmap(boxes.get(i), bitmap);
+
+                        ImageProcessor imageProcessor = new ImageProcessor.Builder()
+                                .add(new ResizeOp(32, 32, ResizeOp.ResizeMethod.BILINEAR)) // resize the image into 32 * 32 pixels.
+                                .add(new NormalizeOp(0.0F, 1.0F)) // Normalize the pixel values between 0 and 1.
+                                .add(new Rot90Op(3)) // Rotate the image k times.
+                                .add(new TransformToGrayscaleOp()) // Transform the image into single channel grayscale.
+                                .build();
+
+                        TensorImage tensorImage = new TensorImage(DataType.FLOAT32);
+
+                        tensorImage.load(bitmap);
+                        tensorImage = imageProcessor.process(tensorImage);
+
+                        float[][] output = new float[1][10];
+                        tflite.run(tensorImage.getBuffer(), output);
+
+                        float prob = 0.5F;
+                        int ans = -1;
+                        for(int j = 0; j < output[0].length; j++){
+                            if(prob < output[0][j]){
+                                prob = output[0][j];
+                                ans = j;
+                            }
+                        }
+                        detectedDigits.add(ans);
+                    }
+
+                    sudokuBoard = HelperUtils.displayDigits(sudokuBoard, detectedDigits);
+//                    String text = "prob: " + Float.toString(1) + " " + "num: " + Integer.toString(0);
+//                    Point position = new Point(5, 10);
+//                    Scalar clr = new Scalar(0, 0, 255);
+//                    int font = Imgproc.FONT_HERSHEY_SIMPLEX;
+//                    int scale = 1;
+//                    int thickness = 3;
+//                    Imgproc.putText(sudokuBoard, text, position, font, scale, color, thickness);
+//                    System.out.println("result before: " + input.length);
+//
+//                    tflite.runForMultipleInputsOutputs(input, outputs);
+//
+//                    System.out.println("result here: " + outputs.get(0));
+
+                    //
+
+                    sudokuBoard = HelperUtils.fitFrame(sudokuBoard, frameSize);
+                    return sudokuBoard;
+                }
+            }
             return src;
         }
     };
@@ -283,7 +344,7 @@ public class MainActivity extends CameraActivity {
     }
 
 
-
+    // load the tflite model
     public MappedByteBuffer loadModelFile(Activity activity) throws IOException {
         AssetFileDescriptor fileDescriptor = activity.getAssets().openFd("model.tflite");
         FileInputStream inputStream = new  FileInputStream(fileDescriptor.getFileDescriptor());

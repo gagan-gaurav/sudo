@@ -10,6 +10,7 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.tensorflow.lite.Interpreter;
@@ -93,13 +94,11 @@ public class HelperUtils {
         List<Mat> boxes = new ArrayList<>();
         int width = box.width() / 9;
         int height = box.height() / 9;
+        int padding = 5;
         for(int i = 0; i < 9; i++){
             for(int j = 8; j >= 0; j--){
-                Rect rec = new Rect(new Point(i * width, j * height), new Point(i * width + width, j * height + height));
+                Rect rec = new Rect(new Point(i * width + padding, j * height + padding), new Point(i * width + width - padding, j * height + height - padding)); // added padding of 5 pixel.
                 Mat temp = box.submat(rec);
-
-                // add code for refining the boxes here.
-
                 boxes.add(temp);
             }
         }
@@ -139,6 +138,26 @@ public class HelperUtils {
         List<Integer> results = new ArrayList<>();
 
         return results;
+    }
+
+    public static Mat displayDigits(Mat image, List <Integer> detectedDigits){
+        int height = image.height() / 9;
+        int width = image.width() / 9;
+        for(int i = 0; i < 9; i++){
+            for(int j = 8; j >= 0; j--){
+                int id = 9 + i + (8 - j);
+                if(detectedDigits.get(id) != -1){
+                    String text = Integer.toString(detectedDigits.get(id));
+                    Point position = new Point(height * j, width * i);
+                    Scalar color = new Scalar(0, 0, 255);
+                    int font = Imgproc.FONT_HERSHEY_SIMPLEX;
+                    double scale = 0.5;
+                    int thickness = 2;
+                    Imgproc.putText(image, text, position, font, scale, color, thickness);
+                }
+            }
+        }
+        return image;
     }
 
 }
